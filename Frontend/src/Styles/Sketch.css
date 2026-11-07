@@ -1,0 +1,92 @@
+.sketch {
+    display: flex;
+    flex: 1;
+    padding: 1rem 0;
+}
+
+.sketch__categories {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: min(275px, calc(100% - 23rem));
+    min-width: max-content;
+    height: fit-content;
+    margin-block: clamp(0.5rem, 2vw, 1.5rem);
+    margin-inline: clamp(1rem, 3vw, 3rem);
+    padding-inline: clamp(0.75rem, 1.5vw, 2rem);
+    padding-block: clamp(1rem, 1.5vw, 2rem);
+    border-radius: 10px;
+    background-color: rgb(223, 243, 216);
+    box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.categories__title {
+    display: flex;
+    justify-content: center;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    text-decoration: underline;
+    padding-bottom: 0.5rem;
+}
+
+.categories__list {
+    display: flex;
+    flex-direction: column;
+    min-width: max-content;
+}
+
+.sketch__workspace {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: clamp(0.5rem, 2vw, 1.5rem);
+    overflow-x: auto;
+}
+
+.workspace__header {
+    display: flex;
+    gap: clamp(1rem, 5vw, 6rem);
+}
+
+.header__searchBar {
+    height: 2rem;
+    width: 70%;
+    min-width: max-content;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.1);
+    padding-inline: 1rem;
+}
+
+.header__searchBar:focus {
+    outline: none;
+}
+
+.header__buttons {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.header__buttons > button {
+    height: 2rem;
+    width: 6rem;
+    border-radius: 8px;
+    background-color: rgb(102, 224, 108);
+    color: white;
+    border: none;
+}
+
+.header__buttons > button:hover {
+    background-color: rgb(81, 177, 86);
+}
+
+.header__buttons > button:active {
+    background-color: rgb(102, 224, 108);
+    
+    .import__text {
+        color: white;
+    }
+}
+
+.importBtn__file {
+    display: none;
+}

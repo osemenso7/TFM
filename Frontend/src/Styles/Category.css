@@ -1,0 +1,9 @@
+.category {
+    margin: 0.20rem 0;
+    white-space: nowrap;
+}
+
+.category__checkbox {
+    margin-right: 0.5rem;
+    accent-color: green;
+}

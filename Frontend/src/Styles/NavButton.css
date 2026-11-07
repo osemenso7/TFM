@@ -1,0 +1,28 @@
+.navButton {
+    border: none;
+    background: none;
+    border-radius: 0;
+    flex: 1 1 0;
+    padding: 0.5rem;
+}
+
+.navButton:hover {
+    background-color: rgb(219, 245, 203);
+
+    .navButton__text {
+        color: rgb(102, 224, 108);
+    }
+}
+
+.navButton:active {
+    background-color: rgb(102, 224, 108);
+    
+    .navButton__text {
+        color: white;
+    }
+}
+
+.navButton__text{
+    font-size: 18px;
+    color: white;
+}
