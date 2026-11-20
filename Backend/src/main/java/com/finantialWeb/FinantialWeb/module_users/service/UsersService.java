@@ -47,13 +47,13 @@ public class UsersService {
         }
 
         User user = User.builder()
-            .username(registerDto.getUsername())
-            .password(passwordEncoder.encode(registerDto.getPassword()))
-            .mail(registerDto.getMail())
-            .name(registerDto.getName())
-            .surname(registerDto.getSurname())
-            .birthday(registerDto.getBirthday())
-            .build();
+                            .username(registerDto.getUsername())
+                            .password(passwordEncoder.encode(registerDto.getPassword()))
+                            .mail(registerDto.getMail())
+                            .name(registerDto.getName())
+                            .surname(registerDto.getSurname())
+                            .birthday(registerDto.getBirthday())
+                            .build();
 
         User savedUser = useRepository.save(user);
 
