@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class ImportsController {
         @ApiResponse(responseCode = "401", description = "Usuario no autenticado")
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> importCsv(@RequestParam("file") MultipartFile file) throws Exception {
+    public ResponseEntity<Void> importCsv(@RequestParam("file") MultipartFile file) throws IOException {
         importsService.importCsv(file);
 
         return ResponseEntity.noContent().build();

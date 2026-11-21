@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.finantialWeb.FinantialWeb.module_users.data.model.User;
 
-
 public interface UserJpaRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
     
     Optional<User> findByUsernameOrMail(String username, String mail);
