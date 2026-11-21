@@ -1,10 +1,18 @@
 import { useState, useRef } from 'react';
+import { requestImportCsv } from '../Services/ImportService';
 
 import Category from '../Components/Category';
+import useAuth from '../Hooks/UseAuth';
 
 import '../Styles/Sketch.css';
 
 const Sketch = () => {
+
+    const { token } = useAuth();
+    const fileInputRef = useRef(null);
+    const [categoriesMarked, setCategoriesMarked] = useState([]);
+    const [importing, setImporting] = useState(false);
+    const [error, setError] = useState('');
 
     const categories = [
         { id: 1, name: 'Luz' },
@@ -13,9 +21,6 @@ const Sketch = () => {
         { id: 4, name: 'Suscripciones' },
         { id: 5, name: 'Comida' }
     ];
-
-    const [categoriesMarked, setCategoriesMarked] = useState([]);
-    const fileInputRef = useRef(null);
 
     const handleCategoriesSelected = (categoryName, isChecked) => {
         setCategoriesMarked((currentCategoriesMarked) =>
@@ -34,9 +39,26 @@ const Sketch = () => {
         fileInputRef.current.click();
     }
 
-    const handleFileSelected = (event) => {
-        console.log('Exportando:', event.target.files[0]);
-    }
+    const handleFileSelected = async (event) => {
+        setError('');
+        setImporting(true);
+
+        const file = event.target.files?.[0];
+
+        if (!file) {
+            return;
+        }
+
+        try {
+            await requestImportCsv(file, token);
+            console.log('CSV importado correctamente');
+        } catch (error) {
+            setError(error.message || 'Invalid file');
+        } finally {
+            setIsImporting(false);
+            event.target.value = '';
+        }
+    };
 
     const handleSave = () => {
         // Aquí puedes implementar la lógica para importar los datos de las categorías seleccionadas
@@ -62,16 +84,18 @@ const Sketch = () => {
                         <button type="button" className="buttons__exportBtn" onClick={handleExport}>
                             <span className="import__text"> Exportar </span>
                         </button>
-                        <button type="button" className="buttons__importBtn" onClick={handleImport}>
-                            <input type="file" className="importBtn__file" ref={fileInputRef} accept=".csv,.xlsx,.xls" onChange={handleFileSelected}/>
+                        <button type="button" className="buttons__importBtn" onClick={handleImport} disabled={importing}>
                             <span className="import__text"> Importar </span>
                         </button>
                         <button type="button" className="buttons__importBtn" onClick={handleSave}>
                             <span className="import__text"> Guardar </span>
                         </button>
                     </div>
+
+                    <input type="file" className="importBtn__file" ref={fileInputRef} accept=".csv" onChange={handleFileSelected} hidden/>
                 </div>
-                <div className="categories__list">  
+                <div className="categories__list"> 
+                    {error && <p className="import__error">{error}</p>} 
                     {categoriesMarked
                         .map((category, index) => (
                             <span key={index} className="category__selected">

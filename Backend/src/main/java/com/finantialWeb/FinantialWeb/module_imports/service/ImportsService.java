@@ -1,36 +1,39 @@
 package com.finantialWeb.FinantialWeb.module_imports.service;
 
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.finantialWeb.FinantialWeb.module_imports.data.ImportJpaRepository;
 import com.finantialWeb.FinantialWeb.module_imports.data.model.Import;
 import com.finantialWeb.FinantialWeb.module_imports.data.model.Transaction;
 import com.finantialWeb.FinantialWeb.module_imports.data.TransactionJpaRepository;
+import com.finantialWeb.FinantialWeb.module_imports.utils.exceptions.ExceptionsImports;
+import com.finantialWeb.FinantialWeb.module_imports.utils.exceptions.InvalidImportException;
 import com.finantialWeb.FinantialWeb.module_users.data.model.User;
 import com.finantialWeb.FinantialWeb.module_users.service.UsersService;
+import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.ExceptionsUsers;
 import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.UserNotFoundException;
-
 
 @Service
 @Slf4j
@@ -42,11 +45,19 @@ public class ImportsService {
     private final UsersService usersService;
 
     @Transactional(rollbackFor = Exception.class)
-    public void importCsv(MultipartFile file) throws Exception {
+    public void importCsv(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new InvalidImportException(ExceptionsImports.EMPTY_FILE);
+        }
+
+        if ((file.getOriginalFilename() == null) || !file.getOriginalFilename().toLowerCase(Locale.ROOT).endsWith(".csv")) {
+            throw new InvalidImportException(ExceptionsImports.INVALID_FILE);
+        }
+
         // Validate authenticated user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        User user = usersService.findByUsernameOrMail(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = usersService.findByUsernameOrMail(username).orElseThrow(() -> new UserNotFoundException(ExceptionsUsers.USER_NOT_FOUND));
 
         // Parse and validate all transactions before persisting them to the database.
         List<Transaction> transactions = new ArrayList<>();
@@ -63,19 +74,33 @@ public class ImportsService {
 
             for (CSVRecord csvRecord : parser) {
 
-                // Ignore metadata rows and empty rows
-                if ((csvRecord.getRecordNumber() <= 3) || csvRecord.stream().allMatch(StringUtils::isBlank)) {
+                long csvRow = csvRecord.getRecordNumber();
+
+                // Ignore metadata rows
+                if (csvRow < 3) {
                     continue;
                 }
 
-                // Validate transaction columns
-                if (csvRecord.size() < 3 || csvRecord.get(0).isBlank()) {
-                    throw new IllegalArgumentException("Invalid transaction at line " + csvRecord.getRecordNumber());
+                // Validate format file
+                if ((csvRow == 3) 
+                    && ((csvRecord.size() < 3) 
+                        || !csvRecord.get(0).trim().equalsIgnoreCase("Concepto") 
+                        || !csvRecord.get(1).trim().equalsIgnoreCase("Fecha") 
+                        || !csvRecord.get(2).trim().equalsIgnoreCase("Importe"))) {
+
+                    throw new InvalidImportException(ExceptionsImports.INVALID_HEADERS);
                 }
 
                 String concept = csvRecord.get(0).trim();
-                LocalDate date = LocalDate.parse(csvRecord.get(1).trim(), formatter);
-                BigDecimal amount = new BigDecimal(csvRecord.get(2).trim());
+                LocalDate date;
+                BigDecimal amount;
+
+                try {
+                    date = LocalDate.parse(csvRecord.get(1).trim(), formatter);
+                    amount = new BigDecimal(csvRecord.get(2).trim());
+                } catch (DateTimeParseException | NumberFormatException ex) {
+                    throw new InvalidImportException(ExceptionsImports.INVALID_DATE_AMOUNT);
+                }
 
                 Transaction transaction = Transaction.builder()
                                                         .concept(concept)
@@ -88,7 +113,7 @@ public class ImportsService {
         }
 
         if (transactions.isEmpty()) {
-            throw new IllegalArgumentException("The CSV file contains no valid transactions");
+            throw new InvalidImportException(ExceptionsImports.EMPTY_FILE);
         }
 
         Import importFile = Import.builder()

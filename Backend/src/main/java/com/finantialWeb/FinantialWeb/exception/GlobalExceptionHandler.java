@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.*;
+import com.finantialWeb.FinantialWeb.module_imports.utils.exceptions.*;
 
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -69,5 +70,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
+    }
+    
+    @ExceptionHandler(InvalidImportException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidImport(InvalidImportException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(MESSAGE, ex.getMessage()));
     }
 }

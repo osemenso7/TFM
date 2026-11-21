@@ -26,7 +26,7 @@ public class UsersService {
     }
 
     public User findById(Long userId) {
-        return useRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(Exceptions.USER_NOT_FOUND + userId));
+        return useRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(ExceptionsUsers.USER_NOT_FOUND + userId));
     }
 
     public Long getTokenVersion(Long userId) {
@@ -43,7 +43,7 @@ public class UsersService {
 
     public UserDto register(RegisterUserDto registerDto) {
         if (useRepository.existsByUsername(registerDto.getUsername()) || (useRepository.existsByMail(registerDto.getMail()))) {
-            throw new UserAlreadyExistsException(Exceptions.USER_ALREADY_EXISTS);
+            throw new UserAlreadyExistsException(ExceptionsUsers.USER_ALREADY_EXISTS);
         }
 
         User user = User.builder()
@@ -61,21 +61,21 @@ public class UsersService {
     }
 
     public UserDto login(String login, String password) {
-        User user = findByUsernameOrMail(login).orElseThrow(() -> new InvalidCredentialsException(Exceptions.USER_INVALID_CREDENTIALS, HttpStatus.UNAUTHORIZED));
+        User user = findByUsernameOrMail(login).orElseThrow(() -> new InvalidCredentialsException(ExceptionsUsers.USER_INVALID_CREDENTIALS, HttpStatus.UNAUTHORIZED));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new InvalidCredentialsException(Exceptions.USER_INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
+            throw new InvalidCredentialsException(ExceptionsUsers.USER_INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
         }
 
         return UserDto.from(user);
     }
 
     public UserDto update(String username, UpdateUserDto updateUserDto) {
-        User user = findByUsernameOrMail(username).orElseThrow(() -> new UserNotFoundException(Exceptions.USER_NOT_FOUND));
+        User user = findByUsernameOrMail(username).orElseThrow(() -> new UserNotFoundException(ExceptionsUsers.USER_NOT_FOUND));
 
         if ((!user.getUsername().equals(updateUserDto.getUsername()) && useRepository.existsByUsername(updateUserDto.getUsername()))
                 || (!user.getMail().equals(updateUserDto.getMail()) && useRepository.existsByMail(updateUserDto.getMail()))) {
-            throw new UserAlreadyExistsException(Exceptions.USER_ALREADY_EXISTS);
+            throw new UserAlreadyExistsException(ExceptionsUsers.USER_ALREADY_EXISTS);
         }
 
         user.update(updateUserDto);
@@ -85,13 +85,13 @@ public class UsersService {
     }
 
     public void delete(String username) {
-        User user = findByUsernameOrMail(username).orElseThrow(() -> new UserNotFoundException(Exceptions.USER_NOT_FOUND));
+        User user = findByUsernameOrMail(username).orElseThrow(() -> new UserNotFoundException(ExceptionsUsers.USER_NOT_FOUND));
 
         useRepository.delete(user);
     }
 
     public void changePassword(String username, ChangePasswordDto changePwdDto) {
-        User user = findByUsernameOrMail(username).orElseThrow(() -> new UserNotFoundException(Exceptions.USER_NOT_FOUND));
+        User user = findByUsernameOrMail(username).orElseThrow(() -> new UserNotFoundException(ExceptionsUsers.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(changePwdDto.getCurrentPassword(), user.getPassword())) {
             throw new InvalidPasswordException("Invalid password");

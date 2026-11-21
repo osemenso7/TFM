@@ -40,8 +40,8 @@ public class UsersController {
                         schema = @Schema(implementation = UserDto.class)
                 )
         ),
-        @ApiResponse(responseCode = "400", description = Exceptions.USER_INVALID_CREDENTIALS),
-        @ApiResponse(responseCode = "409", description = Exceptions.USER_ALREADY_EXISTS)
+        @ApiResponse(responseCode = "400", description = ExceptionsUsers.USER_INVALID_CREDENTIALS),
+        @ApiResponse(responseCode = "409", description = ExceptionsUsers.USER_ALREADY_EXISTS)
     })
     @PostMapping
     public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
@@ -63,8 +63,8 @@ public class UsersController {
                         schema = @Schema(implementation = LoginUserResponseDto.class)
                 )
         ),
-        @ApiResponse(responseCode = "400", description = Exceptions.USER_INVALID_CREDENTIALS),
-        @ApiResponse(responseCode = "401", description = Exceptions.USER_INVALID_CREDENTIALS)
+        @ApiResponse(responseCode = "400", description = ExceptionsUsers.USER_INVALID_CREDENTIALS),
+        @ApiResponse(responseCode = "401", description = ExceptionsUsers.USER_INVALID_CREDENTIALS)
     })
     @PostMapping("/login")
     public ResponseEntity<LoginUserResponseDto> login(@Valid @RequestBody LoginUserDto loginUserDto) {
@@ -90,8 +90,8 @@ public class UsersController {
                 schema = @Schema(implementation = UserDto.class)
                 )
         ),
-        @ApiResponse(responseCode = "401", description = Exceptions.USER_NOT_AUTHENTICATED),
-        @ApiResponse(responseCode = "404", description = Exceptions.USER_NOT_FOUND)
+        @ApiResponse(responseCode = "401", description = ExceptionsUsers.USER_NOT_AUTHENTICATED),
+        @ApiResponse(responseCode = "404", description = ExceptionsUsers.USER_NOT_FOUND)
     })
     @GetMapping("/me")
     public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
@@ -114,10 +114,10 @@ public class UsersController {
                         schema = @Schema(implementation = UserDto.class)
                 )
         ),
-        @ApiResponse(responseCode = "400", description = Exceptions.USER_INVALID_CREDENTIALS),
-        @ApiResponse(responseCode = "401", description = Exceptions.USER_NOT_AUTHENTICATED),
-        @ApiResponse(responseCode = "404", description = Exceptions.USER_NOT_FOUND),
-        @ApiResponse(responseCode = "409", description = Exceptions.USER_ALREADY_EXISTS)
+        @ApiResponse(responseCode = "400", description = ExceptionsUsers.USER_INVALID_CREDENTIALS),
+        @ApiResponse(responseCode = "401", description = ExceptionsUsers.USER_NOT_AUTHENTICATED),
+        @ApiResponse(responseCode = "404", description = ExceptionsUsers.USER_NOT_FOUND),
+        @ApiResponse(responseCode = "409", description = ExceptionsUsers.USER_ALREADY_EXISTS)
      })
      @PutMapping("/me")
      public ResponseEntity<UserDto> update(Authentication authentication, @Valid @RequestBody UpdateUserDto updateUserDto) {
@@ -140,8 +140,8 @@ public class UsersController {
                         schema = @Schema(implementation = UserDto.class)
                 )
         ),
-        @ApiResponse(responseCode = "401", description = Exceptions.USER_NOT_AUTHENTICATED),
-        @ApiResponse(responseCode = "404", description = Exceptions.USER_NOT_FOUND)
+        @ApiResponse(responseCode = "401", description = ExceptionsUsers.USER_NOT_AUTHENTICATED),
+        @ApiResponse(responseCode = "404", description = ExceptionsUsers.USER_NOT_FOUND)
      })
      @DeleteMapping("/me")
      public ResponseEntity<UserDto> delete(Authentication authentication) {
@@ -164,8 +164,8 @@ public class UsersController {
                         schema = @Schema(implementation = UserDto.class)
                 )
         ),
-        @ApiResponse(responseCode = "401", description = Exceptions.USER_NOT_AUTHENTICATED),
-        @ApiResponse(responseCode = "404", description = Exceptions.USER_NOT_FOUND)
+        @ApiResponse(responseCode = "401", description = ExceptionsUsers.USER_NOT_AUTHENTICATED),
+        @ApiResponse(responseCode = "404", description = ExceptionsUsers.USER_NOT_FOUND)
      })
      @PatchMapping("/me/pwd")
      public ResponseEntity<UserDto> patch(Authentication authentication, @Valid @RequestBody ChangePasswordDto changePwdDto) {

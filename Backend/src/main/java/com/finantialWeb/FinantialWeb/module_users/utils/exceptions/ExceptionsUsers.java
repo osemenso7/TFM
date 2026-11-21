@@ -1,8 +1,8 @@
 package com.finantialWeb.FinantialWeb.module_users.utils.exceptions;
 
-public class Exceptions {
+public class ExceptionsUsers {
 
-    private Exceptions() {
+    private ExceptionsUsers() {
         // Evitar instanciación de la clase
     }
 

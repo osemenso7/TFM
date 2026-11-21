@@ -13,12 +13,16 @@ const Header = () => {
     const navigateToDashboard = () => {
         if (isAuthenticated) {
             navigate('/dashboard');
+        } else {
+            navigate('/');
         }
     }
 
     const navigateToSketch = () => {
         if (isAuthenticated) {
             navigate('/sketch');
+        } else {
+            navigate('/');
         }
     }
 
