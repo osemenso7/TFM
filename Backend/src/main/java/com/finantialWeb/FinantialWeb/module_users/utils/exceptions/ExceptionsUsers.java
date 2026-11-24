@@ -3,7 +3,7 @@ package com.finantialWeb.FinantialWeb.module_users.utils.exceptions;
 public class ExceptionsUsers {
 
     private ExceptionsUsers() {
-        // Evitar instanciación de la clase
+        // Prevent class instantiation
     }
 
     //Constants for db entity fields

@@ -20,4 +20,3 @@ public class Category {
     @Column(name = Consts.NAME, unique = true)
     private String name;
 }
-

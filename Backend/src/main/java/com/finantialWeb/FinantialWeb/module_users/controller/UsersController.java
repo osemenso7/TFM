@@ -1,13 +1,5 @@
 package com.finantialWeb.FinantialWeb.module_users.controller;
 
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,8 +7,18 @@ import org.springframework.web.bind.annotation.*;
 
 import com.finantialWeb.FinantialWeb.module_users.controller.model.*;
 import com.finantialWeb.FinantialWeb.module_users.service.UsersService;
-import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.*;
+import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.ExceptionsUsers;
+import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.UserNotFoundException;
 import com.finantialWeb.FinantialWeb.security.JwtService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor

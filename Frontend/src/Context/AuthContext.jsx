@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import { createContext, useState } from 'react';
 import { requestLogin, requestRegister } from '../Services/AuthService';
 
 export const AuthContext = createContext();

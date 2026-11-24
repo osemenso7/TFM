@@ -1,11 +1,7 @@
 package com.finantialWeb.FinantialWeb.security;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -16,6 +12,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.finantialWeb.FinantialWeb.module_users.service.UserSecurityData;
 import com.finantialWeb.FinantialWeb.module_users.service.UsersService;
 import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.UserNotFoundException;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor

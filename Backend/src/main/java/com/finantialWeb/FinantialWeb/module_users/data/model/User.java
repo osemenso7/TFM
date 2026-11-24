@@ -1,11 +1,12 @@
 package com.finantialWeb.FinantialWeb.module_users.data.model;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.finantialWeb.FinantialWeb.module_users.controller.model.UpdateUserDto;
 import com.finantialWeb.FinantialWeb.module_users.utils.Consts;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import lombok.*;
 
 @Entity
@@ -51,4 +52,3 @@ public class User {
         this.birthday = updateUserDto.getBirthday();
     }
 }
-

@@ -86,3 +86,20 @@
         color: white;
     }
 }
+
+.workspace__table {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+.table_import {
+    width: max-content;
+    border-collapse: collapse;
+}
+
+.table_import td{
+    border: 1px solid #485044;
+    padding: 0.2rem 0.5rem;
+}

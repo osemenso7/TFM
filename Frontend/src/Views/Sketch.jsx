@@ -1,39 +1,25 @@
-import { useState, useRef } from 'react';
+// import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { requestImportCsv } from '../Services/ImportService';
+import { saveSelectedCategories } from '../Services/CategoriesService';
 
 import Category from '../Components/Category';
 import useAuth from '../Hooks/UseAuth';
+import useCategories from '../Hooks/UseCategories';
+import useCategoriesMarked from '../Hooks/UseCategoriesMarked';
 
 import '../Styles/Sketch.css';
 
 const Sketch = () => {
 
-    const { token } = useAuth();
     const fileInputRef = useRef(null);
-    const [categoriesMarked, setCategoriesMarked] = useState([]);
-    const [importing, setImporting] = useState(false);
+
+    const { token } = useAuth();
+    const { categories, selectedCategories, categoriesError } = useCategories(token);
+    const { categoriesMarked, handleCategoriesSelected } = useCategoriesMarked(selectedCategories);
+
+    const [processing, setProcessing] = useState(false);
     const [error, setError] = useState('');
-
-    const categories = [
-        { id: 1, name: 'Luz' },
-        { id: 2, name: 'Gas' },
-        { id: 3, name: 'Hipoteca' },
-        { id: 4, name: 'Suscripciones' },
-        { id: 5, name: 'Comida' }
-    ];
-
-    const handleCategoriesSelected = (categoryName, isChecked) => {
-        setCategoriesMarked((currentCategoriesMarked) =>
-            isChecked
-                ? [...currentCategoriesMarked, categoryName]
-                : currentCategoriesMarked.filter((category) => category !== categoryName)
-        );
-    }
-
-    const handleExport = () => {
-        // Aquí puedes implementar la lógica para exportar los datos de las categorías seleccionadas
-        console.log('Exportando categorías:', categoriesMarked);
-    }
 
     const handleImport = () => {
         fileInputRef.current.click();
@@ -41,28 +27,47 @@ const Sketch = () => {
 
     const handleFileSelected = async (event) => {
         setError('');
-        setImporting(true);
+        setProcessing(true);
 
         const file = event.target.files?.[0];
 
         if (!file) {
+            setProcessing(false);
             return;
         }
 
         try {
             await requestImportCsv(file, token);
-            console.log('CSV importado correctamente');
         } catch (error) {
             setError(error.message || 'Invalid file');
         } finally {
-            setIsImporting(false);
+            setProcessing(false);
             event.target.value = '';
         }
     };
 
-    const handleSave = () => {
-        // Aquí puedes implementar la lógica para importar los datos de las categorías seleccionadas
-        console.log('Importando categorías:', categoriesMarked);
+    const handleSave = async () => {
+        setError('');
+        setProcessing(true);
+
+        try {
+            await handleSaveCategories();
+
+            // Pending: Save Import para dashboard
+        } catch (error) {
+            setError(error.message || 'Save error');
+        } finally {
+            setProcessing(false);
+        }
+    };
+
+    const handleSaveCategories = async () => {
+        await saveSelectedCategories(token, categoriesMarked);
+    };
+
+    const handleExport = () => {
+        // Aquí puedes implementar la lógica para exportar los datos de las categorías seleccionadas
+        console.log('Exportando categorías:', categoriesMarked);
     }
 
     return (
@@ -72,7 +77,7 @@ const Sketch = () => {
                 <div className="categories__list">  
                     {categories
                         .map((category) => (
-                        <Category key={category.id} id={category.id} name={category.name} onMark={handleCategoriesSelected} />
+                        <Category key={category.id} id={category.id} name={category.name} isChecked={categoriesMarked.includes(category.id)} onMark={handleCategoriesSelected} />
                     ))}
                 </div>
             </div>
@@ -84,24 +89,29 @@ const Sketch = () => {
                         <button type="button" className="buttons__exportBtn" onClick={handleExport}>
                             <span className="import__text"> Exportar </span>
                         </button>
-                        <button type="button" className="buttons__importBtn" onClick={handleImport} disabled={importing}>
+                        <button type="button" className="buttons__importBtn" onClick={handleImport} disabled={processing}>
                             <span className="import__text"> Importar </span>
                         </button>
-                        <button type="button" className="buttons__importBtn" onClick={handleSave}>
+                        <button type="button" className="buttons__importBtn" onClick={handleSave} disabled={processing}>
                             <span className="import__text"> Guardar </span>
                         </button>
                     </div>
 
                     <input type="file" className="importBtn__file" ref={fileInputRef} accept=".csv" onChange={handleFileSelected} hidden/>
                 </div>
-                <div className="categories__list"> 
+                <div className="workspace__table"> 
                     {error && <p className="import__error">{error}</p>} 
-                    {categoriesMarked
-                        .map((category, index) => (
-                            <span key={index} className="category__selected">
-                                {category}
-                            </span>
-                        ))}
+                    <table className="table_import">
+                        <tbody>
+                            {categories
+                                .filter((category) => categoriesMarked.includes(category.id))
+                                .map((category) => (
+                                <tr key={category.id}>
+                                    <td>{category.name}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

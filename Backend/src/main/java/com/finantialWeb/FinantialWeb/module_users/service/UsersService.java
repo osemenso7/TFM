@@ -1,17 +1,21 @@
 package com.finantialWeb.FinantialWeb.module_users.service;
 
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.finantialWeb.FinantialWeb.module_users.controller.model.*;
+import com.finantialWeb.FinantialWeb.module_users.controller.model.ChangePasswordDto;
+import com.finantialWeb.FinantialWeb.module_users.controller.model.RegisterUserDto;
+import com.finantialWeb.FinantialWeb.module_users.controller.model.UpdateUserDto;
+import com.finantialWeb.FinantialWeb.module_users.controller.model.UserDto;
 import com.finantialWeb.FinantialWeb.module_users.data.UserJpaRepository;
 import com.finantialWeb.FinantialWeb.module_users.data.model.User;
 import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.*;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { AuthProvider} from './Context/AuthContext';
+import { CategoriesProvider } from './Context/CategoriesContext';
 import useAuth from './Hooks/UseAuth';
 
 import Header from './Components/Header.jsx';
@@ -32,8 +33,21 @@ function AppContent() {
                             : <Register/> 
                     }
                 />
-                <Route path="/dashboard" element={<Dashboard/>}/>
-                <Route path="/sketch" element={<Sketch/>}/>
+                <Route 
+                    path="/dashboard" 
+                    element={
+                        isAuthenticated
+                            ? <Dashboard/>
+                            : <Navigate to="/" replace/>
+                    }/>
+                <Route 
+                    path="/sketch"
+                    element={
+                        isAuthenticated
+                            ? <Sketch/>
+                            : <Navigate to="/" replace/>
+                    }
+                />
             </Routes>
         </div>
     );
@@ -42,7 +56,9 @@ function AppContent() {
 function App() {
     return (
         <AuthProvider>
-            <AppContent/>
+            <CategoriesProvider>
+                <AppContent/>
+            </CategoriesProvider>
         </AuthProvider>
     );
 }

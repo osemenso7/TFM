@@ -1,11 +1,12 @@
 package com.finantialWeb.FinantialWeb.module_imports.data.model;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import lombok.*;
 
 import com.finantialWeb.FinantialWeb.module_imports.utils.Consts;
+
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "transactions")
@@ -31,4 +32,13 @@ public class Transaction {
     @JoinColumn(name = Consts.IMPORTID, nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Import importFile;
+
+    public static Transaction createTransaction(String concept, LocalDate date, BigDecimal amount) {
+
+        return Transaction.builder()
+                .concept(concept)
+                .date(date)
+                .amount(amount)
+                .build();
+    }
 }

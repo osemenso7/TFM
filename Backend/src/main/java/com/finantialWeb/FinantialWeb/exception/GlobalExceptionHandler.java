@@ -2,16 +2,20 @@ package com.finantialWeb.FinantialWeb.exception;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.*;
-import com.finantialWeb.FinantialWeb.module_imports.utils.exceptions.*;
-
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import com.finantialWeb.FinantialWeb.module_categories.utils.exceptions.InvalidCategoryException;
+import com.finantialWeb.FinantialWeb.module_imports.utils.exceptions.InvalidImportException;
+import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.InvalidCredentialsException;
+import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.InvalidPasswordException;
+import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.UserAlreadyExistsException;
+import com.finantialWeb.FinantialWeb.module_users.utils.exceptions.UserNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -78,4 +82,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Map.of(MESSAGE, ex.getMessage()));
     }
+
+    @ExceptionHandler(InvalidCategoryException.class)
+    public ResponseEntity<String> handleInvalidCategory(InvalidCategoryException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+        }
 }

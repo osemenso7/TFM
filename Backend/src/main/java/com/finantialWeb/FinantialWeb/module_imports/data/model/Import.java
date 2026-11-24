@@ -1,11 +1,12 @@
 package com.finantialWeb.FinantialWeb.module_imports.data.model;
 
-import jakarta.persistence.*;
 import java.time.OffsetDateTime;
-import lombok.*;
 
 import com.finantialWeb.FinantialWeb.module_imports.utils.Consts;
 import com.finantialWeb.FinantialWeb.module_users.data.model.User;
+
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "imports")
