@@ -15,16 +15,14 @@ import lombok.*;
 public class UserCategory {
 
     @EmbeddedId
-    @AttributeOverrides({
-        @AttributeOverride(
-            name = "userId",
-            column = @Column(name = Consts.USER_ID)
-        ),
-        @AttributeOverride(
-            name = "categoryId",
-            column = @Column(name = Consts.CATEGORY_ID)
-        )
-    })
+    @AttributeOverride(
+        name = "userId",
+        column = @Column(name = Consts.USER_ID)
+    )
+    @AttributeOverride(
+        name = "categoryId",
+        column = @Column(name = Consts.CATEGORY_ID)
+    )
     private UserCategoryId id;
 
     public static UserCategory createUserCategory(Long userId, Long categoryId) {
